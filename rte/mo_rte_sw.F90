@@ -174,8 +174,8 @@ contains
         !
         ! No diffuse flux
         !
-        !gpt_flux_up = 0._wp
-        !gpt_flux_dn = 0._wp
+        gpt_flux_up = 0._wp
+        gpt_flux_dn = 0._wp
         !$acc exit data delete(atmos%tau, atmos)
       class is (ty_optical_props_2str)
         !
