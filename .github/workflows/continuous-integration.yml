@@ -171,7 +171,7 @@ jobs:
       run: |
         mkdir -p ${RFMIP_DIR}
         cd ${RFMIP_DIR}
-        python ./stage_files.py
+        python ${RRTMGP_ROOT}/examples/rfmip-clear-sky/stage_files.py
     ############################################################################
     # Would be great to encode version info
     - name: Run examples, tests
