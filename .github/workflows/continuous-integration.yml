@@ -16,6 +16,7 @@ jobs:
       CC: gcc
       NCHOME: /usr
       NFHOME: /home/runner/netcdf-fortran
+      RFMIP_DIR: /home/runner/rfmip-files
     steps:
     - name: Update system packages
       run: sudo apt-get update
@@ -158,15 +159,26 @@ jobs:
     - name: Install python packages
       run: conda install --yes urllib3 netcdf4 xarray dask scipy matplotlib seaborn colorcet
     ############################################################################
+    - name: Cache RFMIP files
+      id: cache-rfmip-files
+      uses: actions/cache@v2
+      with:
+        path: /home/runner/rfmip-files # Same as #{RFMIP_DIR}
+        key: rfmip-files
+
     - name: Stage RFMIP files
+      if: steps.cache-rfmip-files.outputs.cache-hit != 'true'
       run: |
-        cd ${RRTMGP_ROOT}/examples/rfmip-clear-sky
+        cd ${RFMIP_DIR}
         python ./stage_files.py
+    ############################################################################
+    # Would be great to encode version info
     - name: Run examples, tests
       run: |
         source /opt/intel/oneapi/setvars.sh || true
         export LD_LIBRARY_PATH=${NFHOME}/lib:${LD_LIBRARY_PATH}
         cd ${RRTMGP_ROOT}/examples/rfmip-clear-sky
+        cp ${RFMIP_DIR}/* .
         python ./run-rfmip-examples.py --block_size 8
         cd  ${RRTMGP_ROOT}/examples/all-sky
         python ./run-allsky-example.py
