@@ -169,6 +169,7 @@ jobs:
     - name: Stage RFMIP files
       if: steps.cache-rfmip-files.outputs.cache-hit != 'true'
       run: |
+        mkdir -p ${RFMIP_DIR}
         cd ${RFMIP_DIR}
         python ./stage_files.py
     ############################################################################
